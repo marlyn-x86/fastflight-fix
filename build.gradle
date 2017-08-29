@@ -25,6 +25,13 @@ archivesBaseName = "fastflight_fix"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+sourceSets {
+	main {
+		java { srcDirs = ["$projectDir/src/java"] }
+		resources { srcDirs = ["$projectDir/src/resources"] }
+	}
+}
+
 minecraft {
     version = "1.10.2-12.18.3.2185"
     runDir = "run"
@@ -33,7 +40,7 @@ minecraft {
 
 jar {
 	manifest {
-		attributes 'FMLCorePlugin': 'crazylemon.fastflight_fix.fastFlightFixPlugin'
+		attributes 'FMLCorePlugin': 'crazylemon.fastflight_fix.FastFlightFixPlugin'
 		attributes 'FMLCorePluginContainsMod': 'true'
 	}
 }
