@@ -10,8 +10,9 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LineNumberNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -55,35 +56,40 @@ public class FastFlightFixClassTransformer implements IClassTransformer {
 				FastFlightFixModContainer.logInfo("	Modifying method '%s'", method.name);
 				AbstractInsnNode startNode = null, endNode = null;
 				for(AbstractInsnNode instruction : method.instructions.toArray()) {
-					if(instruction.getType() == AbstractInsnNode.LINE) {
-						switch(((LineNumberNode) instruction).line) {
-						case 477:
-							startNode = instruction;
-							break;
-						case 489:
-							endNode = instruction;
-							break;
-						default:
-							break;
-						}
+					if(instruction.getType() != AbstractInsnNode.LDC_INSN) {
+						continue; // Not our mark
 					}
-					if(startNode != null && endNode != null) {
-						// We found what we were looking for
-						break;
+					if(!(((LdcInsnNode)instruction).cst instanceof String)) {
+						continue;
 					}
+					if(!(((LdcInsnNode)instruction).cst).equals("{} moved too quickly! {},{},{}")) {
+						continue;
+					}
+					// We have a reference point, now to march a set distance in both directions
+					// and plant down our hooks
+					AbstractInsnNode n = instruction;
+					for(int i = 0; i < 54; i++, n = n.getPrevious());
+					// This should be the ALOAD right after line 477
+					startNode = n;
+					// Reset our position back to the middle
+					n = instruction;
+					for(int i = 0; i < 47; i++, n = n.getNext());
+					// This should be the label before line 489
+					endNode = n;
 				}
 				
+				// Make sure what we think we're looking, is
 				if(startNode == null || endNode == null) {
-					// We didn't find what we're looking for, die
 					FastFlightFixModContainer.die("Didn't find the line end points!");
 				}
-				// We have our nodes, now to skip this section
-				AbstractInsnNode end = endNode.getPrevious();
-				if(!(end instanceof LabelNode)) {
-					FastFlightFixModContainer.die("Node before line 489 was not a LabelNode");
+				if(!(startNode instanceof VarInsnNode)) {
+					FastFlightFixModContainer.die("startNode was not a VarInsnNode");
+				}
+				if(!(endNode instanceof LabelNode)) {
+					FastFlightFixModContainer.die("endNode was not a LabelNode");
 				}
 
-				method.instructions.insert(startNode, new JumpInsnNode(GOTO, (LabelNode)end));
+				method.instructions.insertBefore(startNode, new JumpInsnNode(GOTO, (LabelNode)endNode));
 				
 				FastFlightFixModContainer.logInfo("	Modification of method '%s' succeeded", method.name);
 			}
