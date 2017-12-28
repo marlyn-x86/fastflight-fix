@@ -1,6 +1,7 @@
 buildscript {
     repositories {
-        jcenter()
+		mavenLocal()
+		mavenCentral()
         maven {
         	name = "forge" 
         	url = "http://files.minecraftforge.net/maven" 
@@ -11,19 +12,21 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "1.10.2-1.0"
+version = "1.12.2-1.0"
 group= "crazylemon.fastflight_fix" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "fastflight_fix"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
 
 sourceSets {
 	main {
@@ -33,9 +36,9 @@ sourceSets {
 }
 
 minecraft {
-    version = "1.10.2-12.18.3.2185"
+    version = "1.12.2-14.23.1.2555"
     runDir = "run"
-    mappings = "snapshot_20161111"
+    mappings = "snapshot_20171217"
 }
 
 jar {

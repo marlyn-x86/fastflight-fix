@@ -48,7 +48,7 @@ public class FastFlightFixClassTransformer implements IClassTransformer {
 	
 	private static void transformNetHandlerPlayServer(ClassNode netHandlerPlayServerClass, boolean isObfuscated) {
 		final String PROCESS_PLAYER = isObfuscated ? "a" : "processPlayer";
-		final String PROCESS_PLAYER_DESC = isObfuscated ? "(Liw;)V" : "(Lnet/minecraft/network/play/client/CPacketPlayer;)V";
+		final String PROCESS_PLAYER_DESC = isObfuscated ? "(Llk;)V" : "(Lnet/minecraft/network/play/client/CPacketPlayer;)V";
 		FastFlightFixModContainer.logInfo("Modifying class '%s'", netHandlerPlayServerClass.name);
 		
 		for(MethodNode method : netHandlerPlayServerClass.methods) {
@@ -69,12 +69,12 @@ public class FastFlightFixClassTransformer implements IClassTransformer {
 					// and plant down our hooks
 					AbstractInsnNode n = instruction;
 					for(int i = 0; i < 54; i++, n = n.getPrevious());
-					// This should be the ALOAD right after line 477
+					// This should be the ALOAD right after line 543
 					startNode = n;
 					// Reset our position back to the middle
 					n = instruction;
-					for(int i = 0; i < 47; i++, n = n.getNext());
-					// This should be the label before line 489
+					for(int i = 0; i < 46; i++, n = n.getNext());
+					// This should be the label before line 556
 					endNode = n;
 				}
 				

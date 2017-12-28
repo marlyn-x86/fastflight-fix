@@ -22,7 +22,7 @@ public class FastFlightFixModContainer extends DummyModContainer {
 		meta.modId = "fastflight_fix";
 		meta.name = "Fast Flight Fix";
 		meta.description = "Removes the fast movement restriction on non-server-owners.";
-		meta.version = "1.10.2-1.0";
+		meta.version = "1.12.2-1.0";
 		meta.authorList = Arrays.asList("Crazylemon");
 	}
 

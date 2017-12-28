@@ -1,7 +1,9 @@
 package crazylemon.fastflight_fix;
 
 public class PatchFailedException extends RuntimeException {
-
+	
+	static final long serialVersionUID = 0x4433L;
+	
 	public PatchFailedException() {
 		super();
 	}
