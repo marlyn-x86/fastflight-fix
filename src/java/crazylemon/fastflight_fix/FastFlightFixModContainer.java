@@ -36,8 +36,9 @@ public class FastFlightFixModContainer extends DummyModContainer {
      * @param string Reason why we are forcing Minecraft to crash
      */
     public static void die(String reason) throws PatchFailedException {
+    	// This log is here because for some reason forge is squelching this exception?
+    	logInfo("Fatal error: '%s'", reason);
         throw new PatchFailedException("[FastFlightFix] " + reason);
-    	
     }
 
 	@Override
